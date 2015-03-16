@@ -176,7 +176,8 @@ void RADF2_ak1(int ID0, int L1, C1DArray CC, C1DArray& CH, double* WA1){
 	l3_index = -twoido;
 	z_index = -1;
 
-	for (k = 0; k < L1; k++){
+	k = L1;
+	while (k){
 		cc_l_index += ID0;
 		cc_u_index += ID0;
 		l3_index += twoido;
@@ -184,7 +185,8 @@ void RADF2_ak1(int ID0, int L1, C1DArray CC, C1DArray& CH, double* WA1){
 		z_index += twoido;
 		CH[l3_index] = CC[cc_l_index] + CC[cc_u_index];
 		CH[z_index] = CC[cc_l_index] - CC[cc_u_index];
-	} // End for k
+		--k;
+	} // End while
 
 	if (ID0 >= 2){
 		if (ID0 > 2) {
@@ -207,31 +209,27 @@ void RADF2_ak1(int ID0, int L1, C1DArray CC, C1DArray& CH, double* WA1){
 				//zi0_index = 1 + k*ID0;
 				//z5_index = 2 + k*twoido;
 
-				for (i = 2; i < ID0; i += 2){
-
+				i = (ID0 - 1) / 2;
+				while (i){
 					++cc_l_index;
 					++cc_u_index;
 					++zi0_index;
 					++z5_index;
 					--z_index;
-
 					dum1 = CC[cc_u_index + 1];
 					ti2 = WA1[cc_l_index + 1];
 					tr2 = WA1[cc_l_index] * CC[cc_u_index] + ti2 * dum1;
 					ti2 = WA1[cc_l_index++] * dum1 - ti2 * CC[cc_u_index++];
-
 					dum1 = CC[zi0_index++];
 					CH[z5_index] = CC[zi0_index] + ti2;
 					CH[z_index--] = ti2 - CC[zi0_index];
 					CH[z5_index++ - 1] = dum1 + tr2;
 					CH[z_index] = dum1 - tr2;
-
-				} // End for i
+					--i;
+				} // End while
 				
 			}  // End for k
 		} // End if (ID0 > 2)
-
-		//return;  // Temporary immediate return for debugging purposes
 
 		if ((ID0 % 2) == 0){
 
@@ -242,16 +240,15 @@ void RADF2_ak1(int ID0, int L1, C1DArray CC, C1DArray& CH, double* WA1){
 			//z_index = cc_l_index = ID0 - 1;
 			//cc_u_index = cc_l_index + ccZIncr;
 
-			for (k = 0; k < L1; k++){
-
+			k = L1;
+			while (k){
 				cc_l_index += ID0;
 				cc_u_index += ID0;
 				z_index += twoido;
-
 				CH[z_index + 1] = -CC[cc_u_index];
 				CH[z_index] = CC[cc_l_index];
-
-			} // End for k
+				--k;
+			}  // End while
 
 		}  // End if ((ID0 % 2) == 0)
 
