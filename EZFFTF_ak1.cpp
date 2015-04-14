@@ -55,8 +55,8 @@ void EZFFTI_ak1(int N, C1DArray& WA, int ifac_array[FACARSIZE]){
 	// The prime factorization of N is stored in ifac_array.
 
 	if (N > 1) {
-		double arg1, argh, ch1, ch1h, dch1, dsh1, sh1;
-		double TPI = 2.0*PI;
+		double arg1, ch1, ch1h, dch1, dsh1, sh1;
+		double argh = 2.0 * PI / (double) N;
 		int i, id0, ii, ip, ipm, is = 0, j = 0, k1 = 0, l1 = 1, l2, nf = 0, nfm1, nl = N, nq, nr, ntry, ntryh[4] = { 4, 2, 3, 5 };
 
 		do {
@@ -70,7 +70,7 @@ void EZFFTI_ak1(int N, C1DArray& WA, int ifac_array[FACARSIZE]){
 				ifac_array[nf + 1] = ntry;
 				nl = nq;
 				if ((ntry == 2) && (nf != 1)) {
-					for (i = nf; i > 1; i--) ifac_array[i + 1] = ifac_array[i];
+					for (i = nf; i > 1; --i) ifac_array[i + 1] = ifac_array[i];
 					ifac_array[2] = 2;
 				}  // End if ((ntry == 2) && (nf != 1))
 			} while (nl != 1);
@@ -78,7 +78,6 @@ void EZFFTI_ak1(int N, C1DArray& WA, int ifac_array[FACARSIZE]){
 
 		ifac_array[0] = N;
 		ifac_array[1] = nf;
-		argh = TPI / (double) N;
 		nfm1 = nf - 1;
 
 		while (k1 < nfm1){
@@ -91,7 +90,7 @@ void EZFFTI_ak1(int N, C1DArray& WA, int ifac_array[FACARSIZE]){
 			sh1 = 0.0;
 			dch1 = cos(arg1);
 			dsh1 = sin(arg1);
-			for (j = 0; j < ipm; j++){
+			for (j = 0; j < ipm; ++j){
 				ch1h = dch1*ch1 - dsh1*sh1;
 				sh1 = dch1*sh1 + dsh1*ch1;
 				ch1 = ch1h;
@@ -123,7 +122,7 @@ void RFFTF_ak1(int N, C1DArray& WA1, C1DArray& WA2, C1DArray& r2Ar, int ifac_arr
 		bool na = 1;
 		int iw = N - 1, l2 = N, nf = ifac_array[1], idl1, id0, ip, ix2, ix3, ix4, kh = nf + 1, l1;
 
-		for (int k1 = 0; k1 < nf; k1++){
+		for (int k1 = 0; k1 < nf; ++k1){
 			ip = ifac_array[kh--];
 			l1 = l2 / ip;
 			id0 = N / l2;
@@ -158,9 +157,7 @@ void RFFTF_ak1(int N, C1DArray& WA1, C1DArray& WA2, C1DArray& r2Ar, int ifac_arr
 			l2 = l1;
 		}  // End for k1
 
-		if (!na){
-			for (int i = 0; i < N; i++) r2Ar[i] = WA2[i];
-		}  // End if (!na)
+		if (!na) for (int i = 0; i < N; ++i) r2Ar[i] = WA2[i];
 
 	} // End if (N > 1)
 	return;
@@ -1213,7 +1210,7 @@ int main()
 		C1DArray A_Array, B_Array;			// Arrays containing the resultant A and B coefficients
 		C1DArray WORK1_Array, WORK2_Array;	// Arrays containing information for the factorization of the input data
 		C1DArray r_copy_Array;				// Initially, a copy of the R Array
-		double azero;						// The sum from I = 1 I = N of R(I)/N
+		double azero;						// The sum from I = 1 to I = N of R(I)/N
 		int KMAX;							// The size of the A and B arrays.
 
 		try { // Resize the R Array to its required size
