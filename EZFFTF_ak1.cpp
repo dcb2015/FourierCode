@@ -1,27 +1,19 @@
 // EZFFTF_ak1.cpp - Program for computing the Fourier coefficients of a real periodic sequence (Fourier analysis.)
 // Written in Microsoft Visual Studio Express 2013 for Windows Desktop
-// 6 October 2014
+// 15 June 2015
 //
-// The sub-routines listed below are translations of the FORTRAN routines included in FFTPACK,
-// posted off the NETLIB site as . . . :
+// The sub-routines listed below are translations of FORTRAN routines included in FFTPACK, posted off the NETLIB site:
 //
-// http://www.netlib.org/toms/493
+// http://www.netlib.org/fftpack/
 //
-// TOMS/493 is based on the Jenkins-Traub algorithm.
+// Specifically, EZFFTF.FOR and its dependencies, written by Paul N. Swarztrauber, National Center for Atmospheric Research, Boulder, CO.
 //
 // To distinguish the routines posted below from others, an _ak1 suffix has been appended to them.
 //
-// Following is a list of the major changes made in the course of translating the TOMS/493 routines
+// Following is a list of the major changes made in the course of translating the FFTPACK routines
 // to the C++ versions posted below:
 // 1) All global variables have been eliminated.
-// 2) The "FAIL" parameter passed into RPOLY.FOR has been eliminated.
-// 3) RPOLY.FOR solves polynomials of degree up to 100, but does not explicitly state this limit.
-//     rpoly_ak1 explicitly states this limit; uses the macro name MAXDEGREE to specify this limit;
-//     and does a check to ensure that the user input variable Degree is not greater than MAXDEGREE
-//     (if it is, an error message is output and rpoly_ak1 terminates). If a user wishes to compute
-//     roots of polynomials of degree greater than MAXDEGREE, using a macro name like MAXDEGREE provides
-//     the simplest way of offering this capability.
-// 4) All "GO TO" statements have been eliminated.
+// 2) All "GO TO" statements have been eliminated.
 //
 // A small main program is included also, to provide an example of how to use EZFFTF_ak1. In this 
 // example, data is input from a file to eliminate the need for a user to type data in via
@@ -165,15 +157,13 @@ void RFFTF_ak1(int N, C1DArray& WA1, C1DArray& WA2, C1DArray& r2Ar, int ifac_arr
 
 void RADF2_ak1(int ID0, int L1, C1DArray CC, C1DArray& CH, double* WA1){
 
-	int cc_l_index, cc_u_index, ccZIncr = ID0*L1, twoido = 2*ID0, i, idij, idkk, idxz0, idz5, k, l3_index, z_index, zi0_index, z5_index;
+	int cc_l_index, cc_u_index, ccZIncr = ID0*L1, twoido = 2*ID0, i, idij, idkk, idxz0, idz5, k = L1, l3_index, z_index = -1, zi0_index, z5_index;
 	double dum1, tr2, ti2;
 
 	cc_u_index = cc_l_index = -ID0;
 	cc_u_index += ccZIncr;
 	l3_index = -twoido;
-	z_index = -1;
 
-	k = L1;
 	while (k){
 		cc_l_index += ID0;
 		cc_u_index += ID0;
@@ -193,7 +183,7 @@ void RADF2_ak1(int ID0, int L1, C1DArray CC, C1DArray& CH, double* WA1){
 			idxz0 = -ID0;
 			idz5 = -twoido + 1;
 
-			for (k = 0; k < L1; k++){
+			for (k = 0; k < L1; ++k){
 
 				cc_l_index = -1;
 				cc_u_index = idij = idij + ID0;
@@ -230,8 +220,8 @@ void RADF2_ak1(int ID0, int L1, C1DArray CC, C1DArray& CH, double* WA1){
 
 		if ((ID0 % 2) == 0){
 
-			cc_u_index = cc_l_index = -1;
-			cc_u_index += ccZIncr;
+			cc_l_index = -1;
+			cc_u_index = ccZIncr - 1;
 			z_index = -(1 + ID0);
 
 			//z_index = cc_l_index = ID0 - 1;
@@ -1150,7 +1140,7 @@ int main()
 {
 	char rflag = 0; //Readiness flag 
 
-	cout << "                                   EZFFTF_ak1 (30 September 2014)\n";
+	cout << "                                   EZFFTF_ak1 (15 June 2015)\n";
 	cout << "=========================================================================== \n";
 	cout << "This program computes the Fourier coefficients of \n";
 	cout << "a real periodic sequence (Fourier analysis.)\n";
@@ -1165,15 +1155,9 @@ int main()
 	cout << "are type double. The data is also assumed to be UNIFORMLY-spaced.\n";
 	cout << "\n--------------------------------------------------------------------------- \n";
 	cout << "\nThe output is written to the file EZFFTF_ak1out.txt.\n";
-	/*
-	cout << "\nNote the returned value of the variable Degree.\n";
-	cout << "If Degree > 0, it specifies the number of zeros found.\n";
-	cout << "If Degree = 0, the leading coefficient of the input polynomial was 0.\n";
-	cout << "If Degree = -1, the input value of Degree was greater than MAXDEGREE.\n";
 	cout << "\n--------------------------------------------------------------------------- \n";
 	cout << "\nAdditional information is posted at the following URL:\n";
-	cout << "http://www.akiti.ca/rpoly_ak1_Intro.html\n";
-	*/
+	cout << "http://www.akiti.ca/FourierTransform.html\n";
 	cout << "--------------------------------------------------------------------------- \n";
 	cout << "\nIs everything ready (are you ready to continue)? If yes, Enter y. \n";
 	cout << "Otherwise Enter any other key. \n";
@@ -1233,7 +1217,7 @@ int main()
 
 		out.precision(DBL_DIG);
 
-		out << "N = " << N << ".\n\n";
+		out << "N = " << N << "\n\n";
 
 		if (N == 1){
 			azero = rArray[0];
