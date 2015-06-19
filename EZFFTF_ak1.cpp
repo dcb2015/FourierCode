@@ -246,37 +246,28 @@ void RADF2_ak1(int ID0, int L1, C1DArray CC, C1DArray& CH, double* WA1){
 
 void RADF3_ak1(int ID0, int L1, C1DArray CC, C1DArray& CH, double* WA1, double* WA2){
 
-	int cc_l_index, cc_u_index, ccZIncr = ID0*L1, chzincr = 3*ID0, i, idkk, idm2, incr3row, izero2, k, l3_index, twoido = 2*ID0, z_index = 0, zi0_index, z4_index, z5_index;
+	int cc_l_index = -ID0, cc_u_index, ccZIncr = ID0*L1, chzincr = 3 * ID0, i, idkk, idm2, incr3row, izero2, k, l3_index = ccZIncr, twoido = 2 * ID0, z_index = -chzincr, zi0_index = -ID0, z4_index, z5_index;
 
 	double ci2, cr2, di2, dr2, di3, dr3, ti2, tr2, ti3, tr3;
 
 	static double taui = 0.8660254037844386467637231707529361834710262690519031402790348975;
 	static double taur = -0.5;
 
-	l3_index = cc_l_index = -ID0;
-	l3_index += ccZIncr;
+	l3_index -= ID0;
 	cc_u_index = l3_index + ccZIncr;
-	//cc_u_index = l3_index*2;
 
-	z4_index = zi0_index = -ID0;
-	z_index = -chzincr;
-	--z4_index;
-
-	//z4_index = zi0_index - 1;
-
-	for (k = 0; k < L1; k++){
+	for (k = 0; k < L1; ++k){
 
 		cc_l_index += ID0;
 		l3_index += ID0;
 		cc_u_index += ID0;
 		zi0_index += chzincr;
 		z_index += chzincr;
-		z4_index += chzincr;
 
 		cr2 = CC[l3_index] + CC[cc_u_index];
 		CH[z_index] = CC[cc_l_index] + cr2;
 		CH[zi0_index] = taui*(CC[cc_u_index] - CC[l3_index]);
-		CH[z4_index] = CC[cc_l_index] + taur*cr2;
+		CH[zi0_index - 1] = CC[cc_l_index] + taur*cr2;
 
 	}  // End for k
 
@@ -286,7 +277,7 @@ void RADF3_ak1(int ID0, int L1, C1DArray CC, C1DArray& CH, double* WA1, double* 
 		izero2 = -ID0;
 		idkk = -chzincr;
 
-		for (k = 0; k < L1; k++){
+		for (k = 0; k < L1; ++k){
 
 			z4_index = izero2 = izero2 + ID0;
 
@@ -349,7 +340,7 @@ void RADF3_ak1(int ID0, int L1, C1DArray CC, C1DArray& CH, double* WA1, double* 
 
 void RADF4_ak1(int ID0, int L1, C1DArray CC, C1DArray& CH, double* WA1, double* WA2, double* WA3){
 
-	int cc_l_index = -ID0, cc_u_index, i, ccZIncr = L1*ID0, twoido = 2*ID0, idm2, z4_index, incr3row, izero2, k, l3_index, l4_index, chzincr = 2*twoido, z_index, zi0_index = -1, z3_index;
+	int cc_l_index = -ID0, cc_u_index, i, ccZIncr = L1*ID0, twoido = 2 * ID0, idm2, z4_index = -twoido, incr3row, izero2, k, l3_index, l4_index, chzincr = 2 * twoido, z_index = -chzincr, zi0_index = -1, z3_index;
 
 	double cr2, ci2, cr3, ci3, cr4, ci4, tr1, tr2, tr4, ti1, ti4, ti2, ti3, tr3;
 	static double HSQT2 = 0.70710678118654752440084436210484903928483593768474036588339869;
@@ -358,11 +349,7 @@ void RADF4_ak1(int ID0, int L1, C1DArray CC, C1DArray& CH, double* WA1, double* 
 	l4_index = l3_index + ccZIncr;
 	cc_u_index = l4_index + ccZIncr;
 
-	z_index = -chzincr;
-	z3_index = z4_index = z_index + twoido;
-	--z3_index;
-
-	for (k = 0; k < L1; k++){
+	for (k = 0; k < L1; ++k){
 
 		cc_l_index += ID0;
 		cc_u_index += ID0;
@@ -372,13 +359,12 @@ void RADF4_ak1(int ID0, int L1, C1DArray CC, C1DArray& CH, double* WA1, double* 
 		z_index += chzincr;
 		z4_index += chzincr;
 		zi0_index += chzincr;
-		z3_index += chzincr;
 
 		tr1 = CC[l3_index] + CC[cc_u_index];
 		tr2 = CC[cc_l_index] + CC[l4_index];
 		CH[z_index] = tr1 + tr2;
 		CH[zi0_index] = tr2 - tr1;
-		CH[z3_index] = CC[cc_l_index] - CC[l4_index];
+		CH[z4_index - 1] = CC[cc_l_index] - CC[l4_index];
 		CH[z4_index] = CC[cc_u_index] - CC[l3_index];
 
 	} // End for k
@@ -390,7 +376,7 @@ void RADF4_ak1(int ID0, int L1, C1DArray CC, C1DArray& CH, double* WA1, double* 
 			izero2 = -ID0;
 			incr3row = -chzincr;
 
-			for (k = 0; k < L1; k++){
+			for (k = 0; k < L1; ++k){
 
 				//cc_l_index = 1 + k*ID0;
 				cc_l_index = izero2 = izero2 + ID0;
@@ -465,39 +451,32 @@ void RADF4_ak1(int ID0, int L1, C1DArray CC, C1DArray& CH, double* WA1, double* 
 		
 		if ((ID0 % 2) == 0){
 
-			//cc_u_index = z3_index = zi0_index = cc_l_index = ID0 - 1;
 			cc_l_index = -1;
 			cc_u_index = ccZIncr - 1;
-			l3_index = cc_u_index + ccZIncr;
+			l3_index = 2*ccZIncr - 1;
 			l4_index = l3_index + ccZIncr;
 
-			zi0_index = z4_index = ID0 - chzincr;
-			--zi0_index;
-			z3_index = z_index = z4_index + twoido;
-			--z3_index;
+			z4_index = ID0 - chzincr;
+			z_index = -ID0;
 
-			//zi0_index = ID0 - 1 - chzincr;
 			//z_index = twoido + ID0 - chzincr;
-			//z3_index += z_index;
 			//z4_index = ID0 - chzincr;
 			//z_index += ID0;
 
-			for (k = 0; k < L1; k++){
+			for (k = 0; k < L1; ++k){
 
 				cc_l_index += ID0;
 				cc_u_index += ID0;
 				l3_index += ID0;
 				l4_index += ID0;
 
-				zi0_index += chzincr;
 				z_index += chzincr;
 				z4_index += chzincr;
-				z3_index += chzincr;
 
 				ti1 = -HSQT2*(CC[cc_u_index] + CC[l4_index]);
 				tr1 = HSQT2*(CC[cc_u_index] - CC[l4_index]);
-				CH[zi0_index] = tr1 + CC[cc_l_index];
-				CH[z3_index] = CC[cc_l_index] - tr1;
+				CH[z4_index - 1] = tr1 + CC[cc_l_index];
+				CH[z_index - 1] = CC[cc_l_index] - tr1;
 				CH[z4_index] = ti1 - CC[l3_index];
 				CH[z_index] = ti1 + CC[l3_index];
 
