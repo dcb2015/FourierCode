@@ -1,6 +1,6 @@
 // EZFFTF_ak1.cpp - Program for computing the Fourier coefficients of a real periodic sequence (Fourier analysis.)
 // Written in Microsoft Visual Studio Express 2013 for Windows Desktop
-// 15 June 2015
+// 22 June 2015
 //
 // The sub-routines listed below are translations of FORTRAN routines included in FFTPACK, posted off the NETLIB site:
 //
@@ -157,12 +157,8 @@ void RFFTF_ak1(int N, C1DArray& WA1, C1DArray& WA2, C1DArray& r2Ar, int ifac_arr
 
 void RADF2_ak1(int ID0, int L1, C1DArray CC, C1DArray& CH, double* WA1){
 
-	int cc_l_index, cc_u_index, ccZIncr = ID0*L1, twoido = 2*ID0, i, idij, idkk, idxz0, idz5, k = L1, l3_index, z_index = -1, zi0_index, z5_index;
+	int cc_l_index = -ID0, ccZIncr = ID0*L1, twoido = 2 * ID0, i, idij, idkk, idxz0, idz5, cc_u_index = ccZIncr - ID0, k = L1, l3_index = -twoido, z_index = -1, zi0_index, z5_index;
 	double dum1, tr2, ti2;
-
-	cc_u_index = cc_l_index = -ID0;
-	cc_u_index += ccZIncr;
-	l3_index = -twoido;
 
 	while (k){
 		cc_l_index += ID0;
@@ -222,7 +218,7 @@ void RADF2_ak1(int ID0, int L1, C1DArray CC, C1DArray& CH, double* WA1){
 
 			cc_l_index = -1;
 			cc_u_index = ccZIncr - 1;
-			z_index = -(1 + ID0);
+			z_index = -(ID0 + 1);
 
 			//z_index = cc_l_index = ID0 - 1;
 			//cc_u_index = cc_l_index + ccZIncr;
@@ -246,15 +242,12 @@ void RADF2_ak1(int ID0, int L1, C1DArray CC, C1DArray& CH, double* WA1){
 
 void RADF3_ak1(int ID0, int L1, C1DArray CC, C1DArray& CH, double* WA1, double* WA2){
 
-	int cc_l_index = -ID0, cc_u_index, ccZIncr = ID0*L1, chzincr = 3 * ID0, i, idkk, idm2, incr3row, izero2, k, l3_index = ccZIncr, twoido = 2 * ID0, z_index = -chzincr, zi0_index = -ID0, z4_index, z5_index;
+	int cc_l_index = -ID0, ccZIncr = ID0*L1, chzincr = 3 * ID0, i, idkk, idm2, incr3row, izero2, k, l3_index = ccZIncr - ID0, twoido = 2 * ID0, z_index = -chzincr, zi0_index = -ID0, cc_u_index = l3_index + ccZIncr, z4_index, z5_index;
 
 	double ci2, cr2, di2, dr2, di3, dr3, ti2, tr2, ti3, tr3;
 
 	static double taui = 0.8660254037844386467637231707529361834710262690519031402790348975;
 	static double taur = -0.5;
-
-	l3_index -= ID0;
-	cc_u_index = l3_index + ccZIncr;
 
 	for (k = 0; k < L1; ++k){
 
@@ -340,14 +333,10 @@ void RADF3_ak1(int ID0, int L1, C1DArray CC, C1DArray& CH, double* WA1, double* 
 
 void RADF4_ak1(int ID0, int L1, C1DArray CC, C1DArray& CH, double* WA1, double* WA2, double* WA3){
 
-	int cc_l_index = -ID0, cc_u_index, i, ccZIncr = L1*ID0, twoido = 2 * ID0, idm2, z4_index = -twoido, incr3row, izero2, k, l3_index, l4_index, chzincr = 2 * twoido, z_index = -chzincr, zi0_index = -1, z3_index;
+	int cc_l_index = -ID0, i, ccZIncr = L1*ID0, twoido = 2 * ID0, idm2, z4_index = -twoido, incr3row, izero2, k, l3_index = cc_l_index + ccZIncr, l4_index = l3_index + ccZIncr, cc_u_index = l4_index + ccZIncr, chzincr = 2 * twoido, z_index = -chzincr, zi0_index = -1, z3_index;
 
 	double cr2, ci2, cr3, ci3, cr4, ci4, tr1, tr2, tr4, ti1, ti4, ti2, ti3, tr3;
 	static double HSQT2 = 0.70710678118654752440084436210484903928483593768474036588339869;
-
-	l3_index = cc_l_index + ccZIncr;
-	l4_index = l3_index + ccZIncr;
-	cc_u_index = l4_index + ccZIncr;
 
 	for (k = 0; k < L1; ++k){
 
@@ -626,7 +615,7 @@ void RADF5_ak1(int ID0, int L1, C1DArray CC, C1DArray& CH, double* WA1, double* 
 
 void RADFG_ak1(int ID0, int IP, int L1, int IDL1, C1DArray& CC, C1DArray& C1, C1DArray& C2, C1DArray& CH, C1DArray& CH2, double* WA1){
 
-	int cc_l_index, cc_u_index, i, idij, idkk, j, k, ipm1, idp2, idxj, incr3row = IP*ID0, ipph, ipp2, is, izero2, l3_index, nbd, twoido = 2*ID0, z_index;
+	int cc_l_index, cc_u_index, i, idij, idkk, j, k, ipm1 = IP - 1, idp2, idxj, incr3row = IP*ID0, ipph = ((IP + 1) / 2) - 1, ipp2, is, izero2, l3_index, nbd = (ID0 - 1) / 2, twoido = 2 * ID0, z_index;
 
 	double AR1, ar2, AI1, ai2, ar1h, ar2h, ARG_G, dcp, dc2, ds2, dsp;
 
@@ -635,21 +624,17 @@ void RADFG_ak1(int ID0, int IP, int L1, int IDL1, C1DArray& CC, C1DArray& C1, C1
 	ARG_G = TWO_PI / (double) IP;
 	dcp = cos(ARG_G);
 	dsp = sin(ARG_G);
-	//idm2 = ID0 - 2;
-	ipm1 = IP - 1;
-	ipph = ((IP + 1) / 2) - 1;
-	nbd = (ID0 - 1) / 2;
 
 	if (ID0 != 1){
 
-		for (i = 0; i < IDL1; i++)  CH2[i] = C2[i];
+		for (i = 0; i < IDL1; ++i)  CH2[i] = C2[i];
 
 		is = -ID0;
-		for (j = 0; j < ipm1; j++){  // LOOP 103 IN FORTRAN CODE
+		for (j = 0; j < ipm1; ++j){  // LOOP 103 IN FORTRAN CODE
 
 			cc_l_index = is = is + IDL1;
 
-			for (k = 0; k < L1; k++){
+			for (k = 0; k < L1; ++k){
 				cc_l_index += ID0;
 				CH[cc_l_index] = C1[cc_l_index];
 			}  // End for k
@@ -661,13 +646,12 @@ void RADFG_ak1(int ID0, int IP, int L1, int IDL1, C1DArray& CC, C1DArray& C1, C1
 
 			ipp2 = is;
 
-			for (j = 0; j < ipm1; j++){
+			for (j = 0; j < ipm1; ++j){
 
 				idij = is = is + ID0;
 				idp2 = ipp2 = ipp2 + IDL1;
 
-				//for (i = 0; i < idm2; i += 2){
-				for (i = 0; i < nbd; i++){
+				for (i = 0; i < nbd; ++i){
 
 					++idij;
 					ai2 = WA1[idij++];
@@ -678,7 +662,7 @@ void RADFG_ak1(int ID0, int IP, int L1, int IDL1, C1DArray& CC, C1DArray& C1, C1
 					cc_l_index = idp2;
 					//cc_l_index = 1 + (1 + j)*IDL1 + i;
 
-					for (k = 0; k < L1; k++){
+					for (k = 0; k < L1; ++k){
 
 						cc_l_index += ID0;
 
@@ -696,22 +680,21 @@ void RADFG_ak1(int ID0, int IP, int L1, int IDL1, C1DArray& CC, C1DArray& C1, C1
 
 			ipp2 = 0;
 
-			for (j = 0; j < ipm1; j++){
+			for (j = 0; j < ipm1; ++j){
 
 				is += ID0;
 
 				ipp2 = ipp2 + IDL1;
 				idp2 = ipp2 - ID0;
 
-				for (k = 0; k < L1; k++){
+				for (k = 0; k < L1; ++k){
 
 					idij = is;
 
 					cc_l_index = idp2 = idp2 + ID0;
 					//cc_l_index = 1 + (1 + j)*IDL1 + k*ID0;
 
-					//for (i = 0; i < idm2; i += 2){
-					for (i = 0; i < nbd; i++){
+					for (i = 0; i < nbd; ++i){
 
 						++idij;
 						++cc_l_index;
@@ -735,7 +718,7 @@ void RADFG_ak1(int ID0, int IP, int L1, int IDL1, C1DArray& CC, C1DArray& C1, C1
 
 			is = 0;
 
-			for (j = 0; j < ipph; j++){  // LOOP 114 IN FORTRAN CODE
+			for (j = 0; j < ipph; ++j){  // LOOP 114 IN FORTRAN CODE
 
 				is = is + IDL1;
 				izero2 = is - ID0;
@@ -743,7 +726,7 @@ void RADFG_ak1(int ID0, int IP, int L1, int IDL1, C1DArray& CC, C1DArray& C1, C1
 				ipp2 = ipp2 - IDL1;
 				idp2 = ipp2 - ID0;
 
-				for (k = 0; k < L1; k++){
+				for (k = 0; k < L1; ++k){
 
 					cc_l_index = izero2 = izero2 + ID0;
 					cc_u_index = idp2 = idp2 + ID0;
@@ -751,8 +734,7 @@ void RADFG_ak1(int ID0, int IP, int L1, int IDL1, C1DArray& CC, C1DArray& C1, C1
 					//cc_l_index = 1 + (1 + j)*IDL1 + k*ID0;
 					//cc_u_index = 1 + (IP - 1 - j)*IDL1 + k*ID0;
 
-					//for (i = 0; i < idm2; i += 2){
-					for (i = 0; i < nbd; i++){
+					for (i = 0; i < nbd; ++i){
 
 						++cc_l_index;
 						++cc_u_index;
@@ -776,16 +758,13 @@ void RADFG_ak1(int ID0, int IP, int L1, int IDL1, C1DArray& CC, C1DArray& C1, C1
 
 			is = -(ID0 + 1);
 			ipp2 += is;
-			//--ipp2;
-			//ipp2 -= ID0;
 
-			for (j = 0; j < ipph; j++){  // LOOP 118 IN FORTRAN CODE
+			for (j = 0; j < ipph; ++j){  // LOOP 118 IN FORTRAN CODE
 
 				izero2 = is = is + IDL1;
 				idp2 = ipp2 = ipp2 - IDL1;
 
-				//for (i = 0; i < idm2; i += 2){
-				for (i = 0; i < nbd; i++){
+				for (i = 0; i < nbd; ++i){
 
 					++izero2;
 					++izero2;
@@ -797,7 +776,7 @@ void RADFG_ak1(int ID0, int IP, int L1, int IDL1, C1DArray& CC, C1DArray& C1, C1
 					//cc_l_index = 1 + (1 + j)*IDL1 + i;
 					//cc_u_index = 1 + (IP - 1 - j)*IDL1 + i;
 
-					for (k = 0; k < L1; k++){
+					for (k = 0; k < L1; ++k){
 
 						cc_l_index += ID0;
 						cc_u_index += ID0;
@@ -820,7 +799,7 @@ void RADFG_ak1(int ID0, int IP, int L1, int IDL1, C1DArray& CC, C1DArray& C1, C1
 
 	} // End if (ID0 != 1){
 	else { // else ID0 == 1	// 119 in FORTRAN CODE
-		for (i = 0; i < IDL1; i++) C2[i] = CH2[i];
+		for (i = 0; i < IDL1; ++i) C2[i] = CH2[i];
 	}  // End else ID0 == 1
 
 	// 121 in FORTRAN CODE
@@ -828,7 +807,7 @@ void RADFG_ak1(int ID0, int IP, int L1, int IDL1, C1DArray& CC, C1DArray& C1, C1
 	is = -ID0;
 	izero2 = IP*IDL1 - ID0;
 
-	for (j = 0; j < ipph; j++){
+	for (j = 0; j < ipph; ++j){
 
 		cc_l_index = is = is + IDL1;
 		cc_u_index = izero2 = izero2 - IDL1;
@@ -836,7 +815,7 @@ void RADFG_ak1(int ID0, int IP, int L1, int IDL1, C1DArray& CC, C1DArray& C1, C1
 		//cc_l_index = (1 + j)*IDL1;
 		//cc_u_index = (IP - 1 - j)*IDL1;
 
-		for (k = 0; k < L1; k++){
+		for (k = 0; k < L1; ++k){
 			cc_l_index += ID0;
 			cc_u_index += ID0;
 			C1[cc_l_index] = CH[cc_l_index] + CH[cc_u_index];
@@ -853,7 +832,7 @@ void RADFG_ak1(int ID0, int IP, int L1, int IDL1, C1DArray& CC, C1DArray& C1, C1
 
 	//idkk = (ipm1 + 1) * IDL1 - 1;
 
-	for (i = 0; i < ipph; i++){
+	for (i = 0; i < ipph; ++i){
 		ar1h = dcp*AR1 - dsp*AI1;
 		AI1 = dcp*AI1 + dsp*AR1;
 		AR1 = ar1h;
@@ -865,7 +844,7 @@ void RADFG_ak1(int ID0, int IP, int L1, int IDL1, C1DArray& CC, C1DArray& C1, C1
 		//l3_index = (1 + i)*IDL1;
 		//z_index = (ipm1 - i)*IDL1;
 
-		for (k = 0; k < IDL1; k++){
+		for (k = 0; k < IDL1; ++k){
 			++l3_index;
 			++z_index;
 			CH2[l3_index] = C2[k] + AR1*C2[cc_l_index++]; 
@@ -878,7 +857,7 @@ void RADFG_ak1(int ID0, int IP, int L1, int IDL1, C1DArray& CC, C1DArray& C1, C1
 		idij = IDL1 - 1;
 		izero2 = is;
 
-		for (j = 0; j < (ipph - 1) ; j++){
+		for (j = 0; j < (ipph - 1); ++j){
 
 			ar2h = dc2*ar2 - ds2*ai2;
 			ai2 = dc2*ai2 + ds2*ar2;
@@ -894,7 +873,7 @@ void RADFG_ak1(int ID0, int IP, int L1, int IDL1, C1DArray& CC, C1DArray& C1, C1
 			//l3_index = (1 + i)*IDL1;
 			//z_index = (ipm1 - i)*IDL1;
 
-			for (k = 0; k < IDL1; k++){
+			for (k = 0; k < IDL1; ++k){
 
 				++cc_l_index;
 				++cc_u_index;
@@ -910,23 +889,23 @@ void RADFG_ak1(int ID0, int IP, int L1, int IDL1, C1DArray& CC, C1DArray& C1, C1
 
 	is = 0;
 
-	for (j = 0; j < ipph; j++){  // LOOP 129 IN FORTRAN CODE
+	for (j = 0; j < ipph; ++j){  // LOOP 129 IN FORTRAN CODE
 
 		cc_l_index = is = is + IDL1;
 
 		//cc_l_index = (1 + j) * IDL1;
 
-		for (k = 0; k < IDL1; k++)  CH2[k] += C2[cc_l_index++];
+		for (k = 0; k < IDL1; ++k)  CH2[k] += C2[cc_l_index++];
 
 	}  // End for j
 
 	if (ID0 < L1){
 
-		for (i = 0; i < ID0; i++){
+		for (i = 0; i < ID0; ++i){
 
 			cc_u_index = cc_l_index = i;
 
-			for (k = 0; k < L1; k++){
+			for (k = 0; k < L1; ++k){
 				CC[cc_l_index] = CH[cc_u_index];
 
 				cc_l_index += incr3row;
@@ -937,12 +916,12 @@ void RADFG_ak1(int ID0, int IP, int L1, int IDL1, C1DArray& CC, C1DArray& C1, C1
 	}  // End if (ID0 < L1)
 	else {  // else (ID0 >= L1)
 		is = -ID0;
-		for (k = 0; k < L1; k++){
+		for (k = 0; k < L1; ++k){
 			cc_u_index = is = is + ID0;
 			//cc_u_index = k*ID0;
 			cc_l_index = cc_u_index*IP;
 
-			for (i = 0; i < ID0; i++)  CC[cc_l_index++] = CH[cc_u_index++];
+			for (i = 0; i < ID0; ++i)  CC[cc_l_index++] = CH[cc_u_index++];
 
 		}  // End for k
 
@@ -953,11 +932,10 @@ void RADFG_ak1(int ID0, int IP, int L1, int IDL1, C1DArray& CC, C1DArray& C1, C1
 	idxj = is = 0;
 	idkk = IP*IDL1;
 
-	for (j = 0; j < ipph; j++){ // LOOP 137 IN FORTRAN CODE
+	for (j = 0; j < ipph; ++j){ // LOOP 137 IN FORTRAN CODE
 
-		cc_l_index = cc_u_index = is = is + twoido;
-		//cc_l_index = cc_u_index = (1 + j) * twoido;
-		--cc_l_index;
+		cc_u_index = is = is + twoido;
+		//cc_u_index = (1 + j) * twoido;
 
 		l3_index = idxj = idxj + IDL1;
 		//l3_index = (1 + j) * IDL1;
@@ -965,11 +943,10 @@ void RADFG_ak1(int ID0, int IP, int L1, int IDL1, C1DArray& CC, C1DArray& C1, C1
 		z_index = idkk = idkk - IDL1;
 		//z_index = (IP - 1 - j) * IDL1;
 
-		for (k = 0; k < L1; k++){
-			CC[cc_l_index] = CH[l3_index];
+		for (k = 0; k < L1; ++k){
+			CC[cc_u_index - 1] = CH[l3_index];
 			CC[cc_u_index] = CH[z_index];
 
-			cc_l_index += incr3row;
 			cc_u_index += incr3row;
 			l3_index += ID0;
 			z_index += ID0;
@@ -984,13 +961,9 @@ void RADFG_ak1(int ID0, int IP, int L1, int IDL1, C1DArray& CC, C1DArray& C1, C1
 
 			is = -(ID0 + 1);
 			ipp2 += is;
-
-			//--ipp2;
-			//ipp2 -= ID0;
-
 			izero2 = -(incr3row + 1);
 
-			for (j = 0; j < ipph; j++){ // LINE 141, LOOP 144 IN FORTRAN CODE
+			for (j = 0; j < ipph; ++j){ // LINE 141, LOOP 144 IN FORTRAN CODE
 
 				idij = is = is + IDL1;
 
@@ -998,8 +971,7 @@ void RADFG_ak1(int ID0, int IP, int L1, int IDL1, C1DArray& CC, C1DArray& C1, C1
 
 				idxj = idkk = izero2 = izero2 + twoido;
 
-				//for (i = 0; i < idm2; i += 2){
-				for (i = 0; i < nbd; i++){  // Try to replace +2 increment with +1 increment
+				for (i = 0; i < nbd; ++i){
 
 					++idij;
 					++idij;
@@ -1022,7 +994,7 @@ void RADFG_ak1(int ID0, int IP, int L1, int IDL1, C1DArray& CC, C1DArray& C1, C1
 					//l3_index = 1 + (1 + j) * twoido + i;
 					//z_index = (1 + j) * twoido - 3 - i;
 
-					for (k = 0; k < L1; k++){
+					for (k = 0; k < L1; ++k){
 
 						cc_l_index += ID0;
 						cc_u_index += ID0;
@@ -1047,7 +1019,7 @@ void RADFG_ak1(int ID0, int IP, int L1, int IDL1, C1DArray& CC, C1DArray& C1, C1
 			izero2 = is = 0;
 			idxj = -1;
 
-			for (j = 0; j < ipph; j++){ // LOOP 140 IN FORTRAN CODE
+			for (j = 0; j < ipph; ++j){ // LOOP 140 IN FORTRAN CODE
 
 				is = is + IDL1;
 				idij = is - ID0;
@@ -1061,7 +1033,7 @@ void RADFG_ak1(int ID0, int IP, int L1, int IDL1, C1DArray& CC, C1DArray& C1, C1
 				idxj = idxj + twoido;
 				idkk = idxj - incr3row;
 
-				for (k = 0; k < L1; k++){
+				for (k = 0; k < L1; ++k){
 
 					cc_l_index = idij = idij + ID0;
 					cc_u_index = idp2 = idp2 + ID0;
@@ -1073,8 +1045,7 @@ void RADFG_ak1(int ID0, int IP, int L1, int IDL1, C1DArray& CC, C1DArray& C1, C1
 					//l3_index = 1 + (1 + j) * 2 * ID0 + k * IP*ID0;
 					//z_index = (1 + j) * 2 * ID0 + k * incr3row - 2;
 
-					//for (i = 0; i < idm2; i += 2){
-					for (i = 0; i < nbd; i++){
+					for (i = 0; i < nbd; ++i){
 
 						++cc_l_index;
 						++cc_u_index;
@@ -1104,7 +1075,7 @@ int main()
 {
 	char rflag = 0; //Readiness flag 
 
-	cout << "                                   EZFFTF_ak1 (15 June 2015)\n";
+	cout << "                                   EZFFTF_ak1 (22 June 2015)\n";
 	cout << "=========================================================================== \n";
 	cout << "This program computes the Fourier coefficients of \n";
 	cout << "a real periodic sequence (Fourier analysis.)\n";
@@ -1234,14 +1205,14 @@ int main()
 
 		EZFFTI_ak1(N, WORK1_Array, IFAC);
 
-		for (int i = 0; i < N; i++) r_copy_Array[i] = rArray[i];
+		for (int i = 0; i < N; ++i) r_copy_Array[i] = rArray[i];
 
 		RFFTF_ak1(N, WORK1_Array, WORK2_Array, r_copy_Array, IFAC);
 
 		cfm = -cf;
 		azero = 0.5*cf*r_copy_Array[0];
 
-		for (int i = 0; i < ns2m; i++){
+		for (int i = 0; i < ns2m; ++i){
 			A_Array[i] = cf*r_copy_Array[ns2++];
 			B_Array[i] = cfm*r_copy_Array[ns2++];
 		} // End for i
@@ -1254,10 +1225,10 @@ int main()
 		out << "The program has completed successfully.\n\n";
 		out << "The A Array entries follow:\n\n";
 		out << "azero = " << azero << "\n";
-		for (int i = 0; i < KMAX; i++) out << A_Array[i] << "\n";
+		for (int i = 0; i < KMAX; ++i) out << A_Array[i] << "\n";
 		out << "\n";
 		out << "The B Array entries follow:\n\n";
-		for (int i = 0; i < KMAX; i++) out << B_Array[i] << "\n";
+		for (int i = 0; i < KMAX; ++i) out << B_Array[i] << "\n";
 		out.close(); // Close the output file
 	} //End if rflag = 'Y'
 	else cout << "\nNot ready. Try again when ready with information. \n";
